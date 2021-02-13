@@ -280,12 +280,14 @@
                         $node = replacement;
                     }
                 } else if (key === "$text") {
-                    if (typeof val === "function")
+                    if (typeof val === "function") {
                         val = Phenotype.multiline(val);
+                    }
                     $node.textContent = val;
                 } else if (key === "$html") {
-                    if (typeof val === "function")
+                    if (typeof val === "function") {
                         val = Phenotype.multiline(val);
+                    }
                     $node.innerHTML = val;
                 } else if (key === "$components") {
                     Phenotype.$components($node, val);
@@ -296,8 +298,9 @@
                 $node[key] = val;
             } else if (key === "style" && typeof val === "object") {
                 var CSSStyleDeclaration = Phenotype.get(key).get.call($node);
-                for (var attr in val)
+                for (var attr in val) {
                     CSSStyleDeclaration[attr] = val[attr];
+                }
             } else if (
                     typeof val === "number" || typeof val === "string" ||
                     typeof val === "boolean"
