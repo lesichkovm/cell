@@ -439,3 +439,6 @@ https://github.com/brettdewoody/celljs-todo-demo
 - Another TODO app
 https://github.com/SilverSoldier/todoMVC-celljs
 
+
+## Changelog
+2021.02.13 - Added custom "cell-render" event, and global variable celljs to notify the library is present
