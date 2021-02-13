@@ -316,7 +316,7 @@
             if (model.$type === "svg") {
                 $node = $root.document.createElementNS(
                         "http://www.w3.org/2000/svg",
-                        model.$type,
+                        model.$type
                         );
                 meta.namespace = $node.namespaceURI;
             } else if (namespace) {
