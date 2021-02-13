@@ -755,24 +755,29 @@
         exports = x;
     } else {
         God.plan(this);
+
+        var autoload = document.currentScript.dataset.autoload;
+
         if (this.addEventListener) {
             // Let there be Cell
-            this.addEventListener("load", function () {
-                console.log("Loaded");
-                God.create(this);
-                window.dispatchEvent(new CustomEvent('cell-loaded', {}));
-            });
+            if (autoload !== "no") {
+                this.addEventListener("load", function () {
+                    God.create(this);
+                    window.dispatchEvent(new CustomEvent('cell-loaded', {}));
+                });
+            }
             // Let there be Render
             this.addEventListener("cell-render", function (e) {
-                console.log("Cell called");
                 var detail = e.detail;
                 if (typeof detail === 'string' || detail instanceof String) {
                     detail = jsonFnParse(detail);
                 }
-                console.log(detail)
+                
                 this.cellElement = detail;
-                //God.plan(window);
+                
                 God.create(this);
+                
+                window.dispatchEvent(new CustomEvent('cell-rendered', {}));
             });
         }
     }
