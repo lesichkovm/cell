@@ -475,7 +475,7 @@ window.addEventListener("cell-rendered", function (e) {
 ```
 
 
-## Checking if Cell.js Exists on the Page
+## Checking if Cell.js Exists on the Page, or Download
 ```
 if (window.celljs == false) {
     var script = document.createElement('script');
@@ -493,4 +493,6 @@ By default the library will autorender when the page is loaded. To disable this 
 ```
 
 ## Changelog
-2021.02.13 - Added custom "cell-render" event, and global variable celljs to notify the library is present
+2021.02.13 - Added attribute "data-autoload" to disable autoloading
+2021.02.13 - Added custom "cell-render", "cell-loaded", "cell-rendered" events
+2021.02.13 - Added global variable celljs to notify the library is present on the page
