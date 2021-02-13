@@ -439,6 +439,50 @@ https://github.com/brettdewoody/celljs-todo-demo
 - Another TODO app
 https://github.com/SilverSoldier/todoMVC-celljs
 
+## Manual Render After the Load event
+By default Cell.js will use the window.onload event to initialize any $cell element present. However in some events you may not want it to do this, but do this manually.
+
+Here is an example, which will call an API endpoint and render the JSON result. If the JSON is passed as string, it will be parsed with a special function, which supports functions (see: http://www.eslinstructor.net/jsonfn/) so that you can use $init, $update, etc.
+
+```
+fetch("https://auto.sinevia.com:1881/test.js").then(response => {
+    return response.text();
+}).then(response => {
+    window.dispatchEvent(new CustomEvent('cell-render', {
+       detail: response,
+    }));
+});
+```
+
+## Event "cell-loaded"
+
+Dispatched after the cell.js is downloaded, and the window "onload" event is triggered
+
+```
+window.addEventListener("cell-loaded", function (e) {
+     console.log("Cell.js is loaded");
+});
+```
+
+## Event "cell-rendered"
+
+Dispatched after a custom rendering is triggered with "cell-render"
+
+```
+window.addEventListener("cell-rendered", function (e) {
+     console.log("Cell.js custom render complete");
+});
+```
+
+
+## Checking if Cell.js Exists on the Page
+```
+if (window.celljs == false) {
+    var script = document.createElement('script');
+    script.src = "https://cdnjs.cloudflare.com/ajax/libs/cell/1.2.0/cell.min.js";
+    document.head.appendChild(script);
+}
+```
 
 ## Changelog
 2021.02.13 - Added custom "cell-render" event, and global variable celljs to notify the library is present
