@@ -614,13 +614,14 @@
                  * but each variable's value *did* change as a result of each expression. To make sure we don't miss these types, we queue them up with a "r" (read) type.
                  * But we only need to do this for objects and arrays. (not string, number, etc. because they can't have descendants)
                  */
-                if (typeof val !== "object" && !Array.isArray(val))
+                if (typeof val !== "object" && !Array.isArray(val)) {
                     return;
+                }
             }
-            if (Nucleus._queue.indexOf($node) === -1){
+            if (Nucleus._queue.indexOf($node) === -1) {
                 Nucleus._queue.push($node);
             }
-            if (!$node.Dirty){
+            if (!$node.Dirty) {
                 $node.Dirty = {};
             }
             if (!(key in $node.Dirty)) {
@@ -729,11 +730,10 @@
     var jsonFnParse = function (a, f) {
         var b = f ? /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}(?:\.\d*)?)Z$/ : !1;
         return JSON.parse(a, function (a, c) {
-            var e;
             if ("string" !== typeof c || 8 > c.length) {
                 return c;
             }
-            e = c.substring(0, 8);
+            var e = c.substring(0, 8);
             return (b && c.match(b)) ? (new Date(c)) : "function" === e ? eval("(" + c + ")") : ("_PxEgEr_" === e || "_NuFrRa_" === e ? eval(c.slice(8)) : c);
         });
     };
