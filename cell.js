@@ -273,7 +273,7 @@
                                 $node.Genotype,
                                 $node.Inheritance,
                                 null,
-                                $node.Meta.namespace,
+                                $node.Meta.namespace
                                 );
                         $node.parentNode.replaceChild(replacement, $node);
                         $node = replacement;
