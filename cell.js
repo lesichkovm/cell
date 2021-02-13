@@ -6,6 +6,8 @@
  *   - Genotype: "Genotype is an organism's full hereditary information."
  *   - Phenotype: "Phenotype is an organism's actual observed properties, such as morphology, development, or behavior."
  *   - Nucleus: "The nucleus maintains the integrity of genes and controls the activities of the cell by regulating gene expression—the nucleus is, therefore, the control center of the cell."
+ * @param {Window} $root
+ * @returns {void}
  */
 (function ($root) {
     /**
@@ -21,7 +23,7 @@
     var Membrane = {
         /**
          * Membrane.inject() : Inject cell into an existing node
-         * 
+         *
          * @param {Object} $host - existing host node to inject into
          * @param {Object} gene - gene object
          * @param {String} namespace - for handling namespaced elements such as SVG https://developer.mozilla.org/en-US/docs/Web/API/Document/createElementNS
@@ -86,24 +88,25 @@
             /*
              * Membrane.build() : The main builder function that interfaces with Membrane.inject() and Membrane.add().
              */
-            // 1. Attempt to inject into an existing node
             var $existing = Membrane.inject($parent, gene, namespace, replace);
-            if ($existing)
+            if ($existing) {
+                // 1. Attempt to inject into an existing node
                 return $existing;
-            // 2. If it's not an injection into an existing node, we create a node
-            else
+            } else {
+                // 2. If it's not an injection into an existing node, we create a node
                 return Membrane.add($parent, gene, index, namespace);
+            }
         }
     };
 
     /**
      *  [Genotype] Internal Storage of Genes
-     * 
+     *
      *  "Genotype is an organism's full hereditary information."
      * - https://en.wikipedia.org/wiki/Genotype
      *   The Genotype module is an internal storage for all the variables required to construct a cell node (attributes, $variables, and _variables)
      *   When you set a variable on a cell (for example: this._index=1), it's actually stored under the node's Genotype instead of directly on the node itself.
-     * 
+     *
      *    - set(): a low-level function to simply set a key/value pair on the Genotype object, used by update() and build()
      *    - update(): updates a key/value pair from the genotype and schedules a phenotype (view) update event to be processed on the next tick
      *    - build(): builds a fresh genotype object from a gene object
@@ -124,14 +127,16 @@
         build: function ($node, gene, inheritance) {
             $node.Genotype = {};
             $node.Inheritance = inheritance;
-            for (var key in gene) {
+            var key = "";
+            for (key in gene) {
                 Genotype.set($node, key, gene[key]);
             }
         },
         infect: function (gene) {
             var virus = gene.$virus;
-            if (!virus)
+            if (!virus) {
                 return gene;
+            }
             var mutations = Array.isArray(virus) ? virus : [virus];
             delete gene.$virus;
             return mutations.reduce(function (g, mutate) {
@@ -160,11 +165,13 @@
         freeze: function (gene) {
             var cache = [];
             var res = JSON.stringify(gene, function (key, val) {
-                if (typeof val === "function")
+                if (typeof val === "function") {
                     return val.toString();
+                }
                 if (typeof val === "object" && val !== null) {
-                    if (cache.indexOf(val) !== -1)
+                    if (cache.indexOf(val) !== -1) {
                         return "[Circular]";
+                    }
                     cache.push(val);
                 }
                 return val;
@@ -174,19 +181,21 @@
         },
         LCS: function (a, b) {
             var m = a.length, n = b.length, C = [], i, j, af = [], bf = [];
-            for (i = 0; i < m; i++)
+            for (i = 0; i < m; i++) {
                 af.push(Gene.freeze(a[i]));
-            for (j = 0; j < n; j++)
+            }
+            for (j = 0; j < n; j++) {
                 bf.push(Gene.freeze(b[j]));
-            for (i = 0; i <= m; i++)
+            }
+            for (i = 0; i <= m; i++) {
                 C.push([0]);
-            for (j = 0; j < n; j++)
+            }
+            for (j = 0; j < n; j++) {
                 C[0].push(0);
+            }
             for (i = 0; i < m; i++) {
                 for (j = 0; j < n; j++) {
-                    C[i + 1][j + 1] = af[i] === bf[j]
-                            ? C[i][j] + 1
-                            : Math.max(C[i + 1][j], C[i][j + 1]);
+                    C[i + 1][j + 1] = (af[i] === bf[j]) ? (C[i][j] + 1) : Math.max(C[i + 1][j], C[i][j + 1]);
                 }
             }
             return (function bt(i, j) {
@@ -251,10 +260,7 @@
                     .exec(fn.toString())[1];
         },
         get: function (key) {
-            return Object.getOwnPropertyDescriptor(
-                    $root.HTMLElement.prototype,
-                    key,
-                    ) || Object.getOwnPropertyDescriptor($root.Element.prototype, key);
+            return Object.getOwnPropertyDescriptor($root.HTMLElement.prototype, key) || Object.getOwnPropertyDescriptor($root.Element.prototype, key);
         },
         set: function ($node, key, val) {
             if (key[0] === "$") {
@@ -761,13 +767,13 @@
             if (autoload !== "no") {
                 this.addEventListener("load", function () {
                     God.create(this);
-                    window.dispatchEvent(new CustomEvent('cell-loaded', {}));
+                    window.dispatchEvent(new CustomEvent("cell-loaded", {}));
                 });
             }
             // Let there be Render
             this.addEventListener("cell-render", function (e) {
                 var detail = e.detail;
-                if (typeof detail === 'string' || detail instanceof String) {
+                if (typeof detail === "string" || detail instanceof String) {
                     detail = jsonFnParse(detail);
                 }
 
@@ -775,7 +781,7 @@
 
                 God.create(this);
 
-                window.dispatchEvent(new CustomEvent('cell-rendered', {}));
+                window.dispatchEvent(new CustomEvent("cell-rendered", {}));
             });
         }
     }
