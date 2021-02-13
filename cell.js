@@ -730,7 +730,7 @@
     var jsonFnParse = function (a, f) {
         var b = f ? /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}(?:\.\d*)?)Z$/ : !1;
         return JSON.parse(a, function (a, c) {
-            if ("string" !== typeof c || 8 > c.length) {
+            if (typeof c !== "string"  || 8 > c.length) {
                 return c;
             }
             var e = c.substring(0, 8);
