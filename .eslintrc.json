@@ -111,7 +111,7 @@
     "semi-spacing": "error",
     "semi": "error",
     "space-before-blocks": "error",
-    "space-before-function-paren": ["warn", "never"],
+    "space-before-function-paren": ["off", "never"],
     "space-in-parens": "error",
     "space-unary-ops": "error",
     "template-tag-spacing": "error",
