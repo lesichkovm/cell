@@ -28,7 +28,7 @@
     "eqeqeq": "error",
     "func-name-matching": "error",
     "handle-callback-err": "error",
-    "indent": ["ignore", 2, { "SwitchCase": 1 }],
+    "indent": ["off", 2, { "SwitchCase": 1 }],
     "key-spacing": "error",
     "keyword-spacing": ["error"],
     "no-await-in-loop": "warn",
