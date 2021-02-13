@@ -199,8 +199,9 @@
                 }
             }
             return (function bt(i, j) {
-                if (i * j === 0)
+                if (i * j === 0) {
                     return [];
+                }
                 if (af[i - 1] === bf[j - 1]) {
                     return bt(i - 1, j - 1).concat([{item: a[i - 1], _old: i - 1, _new: j - 1}]);
                 }
