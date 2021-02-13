@@ -342,8 +342,9 @@
             return $node;
         },
         $components: function ($parent, components) {
-            if (!components)
+            if (!components) {
                 components = [];
+            }
             var old = [].map.call($parent.childNodes, function ($node) {
                 return $node.Genotype;
             }).filter(function (item) {
@@ -366,8 +367,9 @@
                 diff["+"].forEach(function (item) {
                     var inheritance = $parent.Inheritance;
                     for (var key in $parent.Genotype) {
-                        if (key[0] === "_")
+                        if (key[0] === "_") {
                             inheritance = inheritance.concat([key]);
+                        }
                     }
                     $parent.$build(
                             item.item,
@@ -383,11 +385,13 @@
                 var $fragment = Phenotype.$type({$type: "fragment"});
                 var inheritance = $parent.Inheritance;
                 for (var key in $parent.Genotype) {
-                    if (key[0] === "_")
+                    if (key[0] === "_") {
                         inheritance = inheritance.concat([key]);
+                    }
                 }
-                while ($parent.firstChild)
+                while ($parent.firstChild) {
                     $parent.removeChild($parent.firstChild); // remove empty text nodes
+                }
                 components.forEach(function (component) {
                     $fragment.$build(
                             component,
@@ -525,8 +529,9 @@
         build: function ($node) {
             // 1. The special attributes "$type", "$text", "$html", "$components" are tracked by default even if not manually defined
             ["$type", "$text", "$html", "$components"].forEach(function (key) {
-                if (!(key in $node.Genotype))
+                if (!(key in $node.Genotype)) {
                     Nucleus.set($node, key);
+                }
             });
             // 2. Used for context inheritance. We want to track not just the attributes directly defined on the current node but all the attributes inherited from ancestors.
             if ($node.Inheritance) {
@@ -567,23 +572,23 @@
                             for (var key in $node.Dirty) {
                                 if (Gene.freeze($node.Genotype[key]) !== $node.Dirty[key]) { // Update phenotype if the new value is different from old (Dirty)
                                     Phenotype.set($node, key, $node.Genotype[key]);
-                                    if (key[0] === "_")
+                                    if (key[0] === "_") {
                                         needs_update = true; // If any of the _ variables have changed, need to call $update
+                                    }
                                 }
                             }
-                            if (
-                                    needs_update && "$update" in $node.Genotype &&
-                                    (typeof $node.Genotype.$update === "function")
-                                    ) {
+                            if (needs_update && "$update" in $node.Genotype && (typeof $node.Genotype.$update === "function")) {
                                 Phenotype.$update($node);
-                            } else
+                            } else {
                                 $node.Dirty = null;
+                            }
                         });
 
                         // Remove the $node from the queue
                         var index = Nucleus._queue.indexOf($node);
-                        if (index !== -1)
+                        if (index !== -1) {
                             Nucleus._queue.splice(index, 1);
+                        }
                     });
 
                     // 2. Run the actual function, which will modify the queue
@@ -612,10 +617,12 @@
                 if (typeof val !== "object" && !Array.isArray(val))
                     return;
             }
-            if (Nucleus._queue.indexOf($node) === -1)
+            if (Nucleus._queue.indexOf($node) === -1){
                 Nucleus._queue.push($node);
-            if (!$node.Dirty)
+            }
+            if (!$node.Dirty){
                 $node.Dirty = {};
+            }
             if (!(key in $node.Dirty)) {
                 /*
                  * Caches the original gene under $node.Dirty when a key is touched.
