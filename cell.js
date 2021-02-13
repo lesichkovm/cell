@@ -193,9 +193,7 @@
                 if (i * j === 0)
                     return [];
                 if (af[i - 1] === bf[j - 1]) {
-                    return bt(i - 1, j - 1).concat(
-                            [{item: a[i - 1], _old: i - 1, _new: j - 1}],
-                            );
+                    return bt(i - 1, j - 1).concat([{item: a[i - 1], _old: i - 1, _new: j - 1}]);
                 }
                 return C[i][j - 1] > C[i - 1][j] ? bt(i, j - 1) : bt(i - 1, j);
             }(m, n));
@@ -772,11 +770,11 @@
                 if (typeof detail === 'string' || detail instanceof String) {
                     detail = jsonFnParse(detail);
                 }
-                
+
                 this.cellElement = detail;
-                
+
                 God.create(this);
-                
+
                 window.dispatchEvent(new CustomEvent('cell-rendered', {}));
             });
         }
