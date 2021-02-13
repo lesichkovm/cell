@@ -489,7 +489,7 @@ if (window.celljs == false) {
 By default the library will autorender when the page is loaded. To disable this behaviour use the "data-autoload" attribute with a value of "no"
 
 ```
-<script src="/js/cell.js" data-autoload="no"></script>
+<script src="cell.js" data-autoload="no"></script>
 ```
 
 ## Changelog
