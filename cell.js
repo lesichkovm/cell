@@ -734,7 +734,7 @@
                 return c;
             }
             var e = c.substring(0, 8);
-            return (b && c.match(b)) ? (new Date(c)) : "function" === e ? eval("(" + c + ")") : ("_PxEgEr_" === e || "_NuFrRa_" === e ? eval(c.slice(8)) : c);
+            return (b && c.match(b)) ? (new Date(c)) : e === "function"  ? eval("(" + c + ")") : (e === "_PxEgEr_"  || e === "_NuFrRa_" ? eval(c.slice(8)) : c);
         });
     };
 
