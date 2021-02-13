@@ -496,3 +496,4 @@ By default the library will autorender when the page is loaded. To disable this 
 2021.02.13 - Added attribute "data-autoload" to disable autoloading
 2021.02.13 - Added custom "cell-render", "cell-loaded", "cell-rendered" events
 2021.02.13 - Added global variable celljs to notify the library is present on the page
+2020.11.20 - Fixed deprecation messages in Firefox
