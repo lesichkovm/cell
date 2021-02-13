@@ -302,13 +302,15 @@
                     typeof val === "number" || typeof val === "string" ||
                     typeof val === "boolean"
                     ) {
-                if ($node.setAttribute)
+                if ($node.setAttribute) {
                     $node.setAttribute(key, val);
+                }
             } else if (typeof val === "function") {
                 // For natively supported HTMLElement.prototype methods such as onclick()
                 var prop = Phenotype.get(key);
-                if (prop)
+                if (prop) {
                     prop.set.call($node, val);
+                }
             }
         },
         $type: function (model, namespace) {
