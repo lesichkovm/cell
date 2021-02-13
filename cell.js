@@ -367,7 +367,7 @@
                             item.item,
                             inheritance,
                             item.index,
-                            $parent.Meta.namespace,
+                            $parent.Meta.namespace
                             );
                     $parent.$components[item.index] =
                             $parent.childNodes[item.index].Genotype;
@@ -387,7 +387,7 @@
                             component,
                             inheritance,
                             null,
-                            $parent.Meta.namespace,
+                            $parent.Meta.namespace
                             );
                 });
                 $parent.appendChild($fragment);
