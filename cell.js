@@ -728,13 +728,13 @@
     };
 
     var jsonFnParse = function (a, f) {
-        var b = f ? /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}(?:\.\d*)?)Z$/ : !1;
+        var b = f ? (/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}(?:\.\d*)?)Z$/) : !1;
         return JSON.parse(a, function (a, c) {
-            if (typeof c !== "string"  || 8 > c.length) {
+            if (typeof c !== "string" || c.length < 8) {
                 return c;
             }
             var e = c.substring(0, 8);
-            return (b && c.match(b)) ? (new Date(c)) : e === "function"  ? eval("(" + c + ")") : (e === "_PxEgEr_"  || e === "_NuFrRa_" ? eval(c.slice(8)) : c);
+            return (b && c.match(b)) ? (new Date(c)) : e === "function" ? eval("(" + c + ")") : (e === "_PxEgEr_" || e === "_NuFrRa_" ? eval(c.slice(8)) : c);
         });
     };
 
