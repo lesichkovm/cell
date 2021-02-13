@@ -465,7 +465,7 @@
                                 // The "value" attribute needs a special treatment.
                                 return Object.getOwnPropertyDescriptor(
                                         Object.getPrototypeOf($node),
-                                        key,
+                                        key
                                         ).get.call($node);
                             } else if (key === "style") {
                                 return Phenotype.get(key).get.call($node);
@@ -489,9 +489,7 @@
                         var $current = $node;
                         if (!(key in $node.Genotype) && key[0] === "_") {
                             while ($current = $current.parentNode) { // eslint-disable-line no-cond-assign
-                                if (
-                                        $current && $current.Genotype && (key in $current.Genotype)
-                                        ) {
+                                if ($current && $current.Genotype && (key in $current.Genotype)) {
                                     break;
                                 }
                             }
@@ -501,10 +499,7 @@
                         // 2. DOM attribute handling (anything that doesn't start with $ or _)
                         if (key[0] !== "$" && key[0] !== "_") {
                             if (key === "value") {
-                                return Object.getOwnPropertyDescriptor(
-                                        Object.getPrototypeOf($node),
-                                        key,
-                                        ).set.call($node, val);
+                                return Object.getOwnPropertyDescriptor(Object.getPrototypeOf($node), key).set.call($node, val);
                             } else if (key === "style" && typeof val === "object") {
                                 Phenotype.get(key).set.call($node, val);
                             } else if (
