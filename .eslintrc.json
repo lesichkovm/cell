@@ -42,6 +42,7 @@
     "array-callback-return": "error",
     "block-spacing": "error",
     "brace-style": ["error", "1tbs", { "allowSingleLine": true }],
+    "callback-return": "error",
     "comma-dangle": ["warning", "always-multiline"],
     "comma-spacing": "error",
     "comma-style": "error",
@@ -55,6 +56,8 @@
     "no-floating-decimal": "error",
     "no-implied-eval": "error",
     "no-invalid-this": "error",
+    "no-label-var": "error",
+    "no-undef-init": "error",
     "no-lone-blocks": "error",
     "no-multi-spaces": "error",
     "no-new-func": "error",
@@ -80,10 +83,6 @@
     "valid-jsdoc": "error",
     "yoda": "error",
 
-    "no-label-var": "error",
-    "no-undef-init": "error",
-
-    "callback-return": "error",
     "handle-callback-err": "error",
 
     "eol-last": "error",
@@ -105,7 +104,7 @@
     "no-unneeded-ternary": "error",
     "no-whitespace-before-property": "error",
     "nonblock-statement-body-position": "error",
-    "object-curly-spacing": ["error", "always"],
+    "object-curly-spacing": ["warn", "always"],
     "operator-assignment": "error",
     "operator-linebreak": ["error", "after"],
     "padded-blocks": ["error", "never"],
