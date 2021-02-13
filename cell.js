@@ -674,13 +674,7 @@
                 $root = $context;
             }
             $context.DocumentFragment.prototype.$build = $context.Element.prototype
-                    .$build = function (
-                            healthy_gene,
-                            inheritance,
-                            index,
-                            namespace,
-                            replace
-                            ) {
+                    .$build = function (healthy_gene, inheritance, index, namespace, replace) {
                         var gene = Genotype.infect(healthy_gene);
                         var $node = Membrane.build(this, gene, index, namespace, replace);
                         Genotype.build($node, gene, inheritance || [], index);
@@ -690,13 +684,7 @@
                     };
             $context.DocumentFragment.prototype.$cell = $context.Element.prototype
                     .$cell = function (gene, options) {
-                        return this.$build(
-                                gene,
-                                [],
-                                null,
-                                (options && options.namespace) || null,
-                                true,
-                                );
+                        return this.$build(gene, [], null, (options && options.namespace) || null, true);
                     };
             $context.DocumentFragment.prototype.$snapshot = $context.Element.prototype
                     .$snapshot = function () {
@@ -729,10 +717,11 @@
         var b = f ? /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}(?:\.\d*)?)Z$/ : !1;
         return JSON.parse(a, function (a, c) {
             var e;
-            if ("string" !== typeof c || 8 > c.length)
+            if ("string" !== typeof c || 8 > c.length) {
                 return c;
+            }
             e = c.substring(0, 8);
-            return b && c.match(b) ? new Date(c) : "function" === e ? eval("(" + c + ")") : "_PxEgEr_" === e || "_NuFrRa_" === e ? eval(c.slice(8)) : c;
+            return (b && c.match(b)) ? (new Date(c)) : "function" === e ? eval("(" + c + ")") : ("_PxEgEr_" === e || "_NuFrRa_" === e ? eval(c.slice(8)) : c);
         });
     };
 
