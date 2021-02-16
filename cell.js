@@ -6,6 +6,8 @@
  *   - Genotype: "Genotype is an organism's full hereditary information."
  *   - Phenotype: "Phenotype is an organism's actual observed properties, such as morphology, development, or behavior."
  *   - Nucleus: "The nucleus maintains the integrity of genes and controls the activities of the cell by regulating gene expression—the nucleus is, therefore, the control center of the cell."
+ * @param {Window} $root
+ * @returns {void}
  */
 (function ($root) {
     /**
@@ -21,7 +23,7 @@
     var Membrane = {
         /**
          * Membrane.inject() : Inject cell into an existing node
-         * 
+         *
          * @param {Object} $host - existing host node to inject into
          * @param {Object} gene - gene object
          * @param {String} namespace - for handling namespaced elements such as SVG https://developer.mozilla.org/en-US/docs/Web/API/Document/createElementNS
@@ -86,24 +88,25 @@
             /*
              * Membrane.build() : The main builder function that interfaces with Membrane.inject() and Membrane.add().
              */
-            // 1. Attempt to inject into an existing node
             var $existing = Membrane.inject($parent, gene, namespace, replace);
-            if ($existing)
+            if ($existing) {
+                // 1. Attempt to inject into an existing node
                 return $existing;
-            // 2. If it's not an injection into an existing node, we create a node
-            else
+            } else {
+                // 2. If it's not an injection into an existing node, we create a node
                 return Membrane.add($parent, gene, index, namespace);
+            }
         }
     };
 
     /**
      *  [Genotype] Internal Storage of Genes
-     * 
+     *
      *  "Genotype is an organism's full hereditary information."
      * - https://en.wikipedia.org/wiki/Genotype
      *   The Genotype module is an internal storage for all the variables required to construct a cell node (attributes, $variables, and _variables)
      *   When you set a variable on a cell (for example: this._index=1), it's actually stored under the node's Genotype instead of directly on the node itself.
-     * 
+     *
      *    - set(): a low-level function to simply set a key/value pair on the Genotype object, used by update() and build()
      *    - update(): updates a key/value pair from the genotype and schedules a phenotype (view) update event to be processed on the next tick
      *    - build(): builds a fresh genotype object from a gene object
@@ -124,14 +127,16 @@
         build: function ($node, gene, inheritance) {
             $node.Genotype = {};
             $node.Inheritance = inheritance;
-            for (var key in gene) {
+            var key = "";
+            for (key in gene) {
                 Genotype.set($node, key, gene[key]);
             }
         },
         infect: function (gene) {
             var virus = gene.$virus;
-            if (!virus)
+            if (!virus) {
                 return gene;
+            }
             var mutations = Array.isArray(virus) ? virus : [virus];
             delete gene.$virus;
             return mutations.reduce(function (g, mutate) {
@@ -160,11 +165,13 @@
         freeze: function (gene) {
             var cache = [];
             var res = JSON.stringify(gene, function (key, val) {
-                if (typeof val === "function")
+                if (typeof val === "function") {
                     return val.toString();
+                }
                 if (typeof val === "object" && val !== null) {
-                    if (cache.indexOf(val) !== -1)
+                    if (cache.indexOf(val) !== -1) {
                         return "[Circular]";
+                    }
                     cache.push(val);
                 }
                 return val;
@@ -174,28 +181,29 @@
         },
         LCS: function (a, b) {
             var m = a.length, n = b.length, C = [], i, j, af = [], bf = [];
-            for (i = 0; i < m; i++)
+            for (i = 0; i < m; i++) {
                 af.push(Gene.freeze(a[i]));
-            for (j = 0; j < n; j++)
+            }
+            for (j = 0; j < n; j++) {
                 bf.push(Gene.freeze(b[j]));
-            for (i = 0; i <= m; i++)
+            }
+            for (i = 0; i <= m; i++) {
                 C.push([0]);
-            for (j = 0; j < n; j++)
+            }
+            for (j = 0; j < n; j++) {
                 C[0].push(0);
+            }
             for (i = 0; i < m; i++) {
                 for (j = 0; j < n; j++) {
-                    C[i + 1][j + 1] = af[i] === bf[j]
-                            ? C[i][j] + 1
-                            : Math.max(C[i + 1][j], C[i][j + 1]);
+                    C[i + 1][j + 1] = (af[i] === bf[j]) ? (C[i][j] + 1) : Math.max(C[i + 1][j], C[i][j + 1]);
                 }
             }
             return (function bt(i, j) {
-                if (i * j === 0)
+                if (i * j === 0) {
                     return [];
+                }
                 if (af[i - 1] === bf[j - 1]) {
-                    return bt(i - 1, j - 1).concat(
-                            [{item: a[i - 1], _old: i - 1, _new: j - 1}],
-                            );
+                    return bt(i - 1, j - 1).concat([{item: a[i - 1], _old: (i - 1), _new: (j - 1)}]);
                 }
                 return C[i][j - 1] > C[i - 1][j] ? bt(i, j - 1) : bt(i - 1, j);
             }(m, n));
@@ -253,10 +261,7 @@
                     .exec(fn.toString())[1];
         },
         get: function (key) {
-            return Object.getOwnPropertyDescriptor(
-                    $root.HTMLElement.prototype,
-                    key,
-                    ) || Object.getOwnPropertyDescriptor($root.Element.prototype, key);
+            return Object.getOwnPropertyDescriptor($root.HTMLElement.prototype, key) || Object.getOwnPropertyDescriptor($root.Element.prototype, key);
         },
         set: function ($node, key, val) {
             if (key[0] === "$") {
@@ -269,18 +274,20 @@
                                 $node.Genotype,
                                 $node.Inheritance,
                                 null,
-                                $node.Meta.namespace,
+                                $node.Meta.namespace
                                 );
                         $node.parentNode.replaceChild(replacement, $node);
                         $node = replacement;
                     }
                 } else if (key === "$text") {
-                    if (typeof val === "function")
+                    if (typeof val === "function") {
                         val = Phenotype.multiline(val);
+                    }
                     $node.textContent = val;
                 } else if (key === "$html") {
-                    if (typeof val === "function")
+                    if (typeof val === "function") {
                         val = Phenotype.multiline(val);
+                    }
                     $node.innerHTML = val;
                 } else if (key === "$components") {
                     Phenotype.$components($node, val);
@@ -291,19 +298,22 @@
                 $node[key] = val;
             } else if (key === "style" && typeof val === "object") {
                 var CSSStyleDeclaration = Phenotype.get(key).get.call($node);
-                for (var attr in val)
+                for (var attr in val) {
                     CSSStyleDeclaration[attr] = val[attr];
+                }
             } else if (
                     typeof val === "number" || typeof val === "string" ||
                     typeof val === "boolean"
                     ) {
-                if ($node.setAttribute)
+                if ($node.setAttribute) {
                     $node.setAttribute(key, val);
+                }
             } else if (typeof val === "function") {
                 // For natively supported HTMLElement.prototype methods such as onclick()
                 var prop = Phenotype.get(key);
-                if (prop)
+                if (prop) {
                     prop.set.call($node, val);
+                }
             }
         },
         $type: function (model, namespace) {
@@ -312,7 +322,7 @@
             if (model.$type === "svg") {
                 $node = $root.document.createElementNS(
                         "http://www.w3.org/2000/svg",
-                        model.$type,
+                        model.$type
                         );
                 meta.namespace = $node.namespaceURI;
             } else if (namespace) {
@@ -332,8 +342,9 @@
             return $node;
         },
         $components: function ($parent, components) {
-            if (!components)
+            if (!components) {
                 components = [];
+            }
             var old = [].map.call($parent.childNodes, function ($node) {
                 return $node.Genotype;
             }).filter(function (item) {
@@ -356,14 +367,15 @@
                 diff["+"].forEach(function (item) {
                     var inheritance = $parent.Inheritance;
                     for (var key in $parent.Genotype) {
-                        if (key[0] === "_")
+                        if (key[0] === "_") {
                             inheritance = inheritance.concat([key]);
+                        }
                     }
                     $parent.$build(
                             item.item,
                             inheritance,
                             item.index,
-                            $parent.Meta.namespace,
+                            $parent.Meta.namespace
                             );
                     $parent.$components[item.index] =
                             $parent.childNodes[item.index].Genotype;
@@ -373,17 +385,19 @@
                 var $fragment = Phenotype.$type({$type: "fragment"});
                 var inheritance = $parent.Inheritance;
                 for (var key in $parent.Genotype) {
-                    if (key[0] === "_")
+                    if (key[0] === "_") {
                         inheritance = inheritance.concat([key]);
+                    }
                 }
-                while ($parent.firstChild)
+                while ($parent.firstChild) {
                     $parent.removeChild($parent.firstChild); // remove empty text nodes
+                }
                 components.forEach(function (component) {
                     $fragment.$build(
                             component,
                             inheritance,
                             null,
-                            $parent.Meta.namespace,
+                            $parent.Meta.namespace
                             );
                 });
                 $parent.appendChild($fragment);
@@ -461,7 +475,7 @@
                                 // The "value" attribute needs a special treatment.
                                 return Object.getOwnPropertyDescriptor(
                                         Object.getPrototypeOf($node),
-                                        key,
+                                        key
                                         ).get.call($node);
                             } else if (key === "style") {
                                 return Phenotype.get(key).get.call($node);
@@ -485,9 +499,7 @@
                         var $current = $node;
                         if (!(key in $node.Genotype) && key[0] === "_") {
                             while ($current = $current.parentNode) { // eslint-disable-line no-cond-assign
-                                if (
-                                        $current && $current.Genotype && (key in $current.Genotype)
-                                        ) {
+                                if ($current && $current.Genotype && (key in $current.Genotype)) {
                                     break;
                                 }
                             }
@@ -497,10 +509,7 @@
                         // 2. DOM attribute handling (anything that doesn't start with $ or _)
                         if (key[0] !== "$" && key[0] !== "_") {
                             if (key === "value") {
-                                return Object.getOwnPropertyDescriptor(
-                                        Object.getPrototypeOf($node),
-                                        key,
-                                        ).set.call($node, val);
+                                return Object.getOwnPropertyDescriptor(Object.getPrototypeOf($node), key).set.call($node, val);
                             } else if (key === "style" && typeof val === "object") {
                                 Phenotype.get(key).set.call($node, val);
                             } else if (
@@ -520,8 +529,9 @@
         build: function ($node) {
             // 1. The special attributes "$type", "$text", "$html", "$components" are tracked by default even if not manually defined
             ["$type", "$text", "$html", "$components"].forEach(function (key) {
-                if (!(key in $node.Genotype))
+                if (!(key in $node.Genotype)) {
                     Nucleus.set($node, key);
+                }
             });
             // 2. Used for context inheritance. We want to track not just the attributes directly defined on the current node but all the attributes inherited from ancestors.
             if ($node.Inheritance) {
@@ -562,23 +572,23 @@
                             for (var key in $node.Dirty) {
                                 if (Gene.freeze($node.Genotype[key]) !== $node.Dirty[key]) { // Update phenotype if the new value is different from old (Dirty)
                                     Phenotype.set($node, key, $node.Genotype[key]);
-                                    if (key[0] === "_")
+                                    if (key[0] === "_") {
                                         needs_update = true; // If any of the _ variables have changed, need to call $update
+                                    }
                                 }
                             }
-                            if (
-                                    needs_update && "$update" in $node.Genotype &&
-                                    (typeof $node.Genotype.$update === "function")
-                                    ) {
+                            if (needs_update && "$update" in $node.Genotype && (typeof $node.Genotype.$update === "function")) {
                                 Phenotype.$update($node);
-                            } else
+                            } else {
                                 $node.Dirty = null;
+                            }
                         });
 
                         // Remove the $node from the queue
                         var index = Nucleus._queue.indexOf($node);
-                        if (index !== -1)
+                        if (index !== -1) {
                             Nucleus._queue.splice(index, 1);
+                        }
                     });
 
                     // 2. Run the actual function, which will modify the queue
@@ -604,13 +614,16 @@
                  * but each variable's value *did* change as a result of each expression. To make sure we don't miss these types, we queue them up with a "r" (read) type.
                  * But we only need to do this for objects and arrays. (not string, number, etc. because they can't have descendants)
                  */
-                if (typeof val !== "object" && !Array.isArray(val))
+                if (typeof val !== "object" && !Array.isArray(val)) {
                     return;
+                }
             }
-            if (Nucleus._queue.indexOf($node) === -1)
+            if (Nucleus._queue.indexOf($node) === -1) {
                 Nucleus._queue.push($node);
-            if (!$node.Dirty)
+            }
+            if (!$node.Dirty) {
                 $node.Dirty = {};
+            }
             if (!(key in $node.Dirty)) {
                 /*
                  * Caches the original gene under $node.Dirty when a key is touched.
@@ -675,13 +688,7 @@
                 $root = $context;
             }
             $context.DocumentFragment.prototype.$build = $context.Element.prototype
-                    .$build = function (
-                            healthy_gene,
-                            inheritance,
-                            index,
-                            namespace,
-                            replace
-                            ) {
+                    .$build = function (healthy_gene, inheritance, index, namespace, replace) {
                         var gene = Genotype.infect(healthy_gene);
                         var $node = Membrane.build(this, gene, index, namespace, replace);
                         Genotype.build($node, gene, inheritance || [], index);
@@ -691,13 +698,7 @@
                     };
             $context.DocumentFragment.prototype.$cell = $context.Element.prototype
                     .$cell = function (gene, options) {
-                        return this.$build(
-                                gene,
-                                [],
-                                null,
-                                (options && options.namespace) || null,
-                                true,
-                                );
+                        return this.$build(gene, [], null, (options && options.namespace) || null, true);
                     };
             $context.DocumentFragment.prototype.$snapshot = $context.Element.prototype
                     .$snapshot = function () {
@@ -727,13 +728,13 @@
     };
 
     var jsonFnParse = function (a, f) {
-        var b = f ? /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}(?:\.\d*)?)Z$/ : !1;
+        var b = f ? (/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}(?:\.\d*)?)Z$/) : !1;
         return JSON.parse(a, function (a, c) {
-            var e;
-            if ("string" !== typeof c || 8 > c.length)
+            if (typeof c !== "string" || c.length < 8) {
                 return c;
-            e = c.substring(0, 8);
-            return b && c.match(b) ? new Date(c) : "function" === e ? eval("(" + c + ")") : "_PxEgEr_" === e || "_NuFrRa_" === e ? eval(c.slice(8)) : c;
+            }
+            var e = c.substring(0, 8);
+            return (b && c.match(b)) ? (new Date(c)) : e === "function" ? eval("(" + c + ")") : (e === "_PxEgEr_" || e === "_NuFrRa_" ? eval(c.slice(8)) : c);
         });
     };
 
@@ -755,24 +756,29 @@
         exports = x;
     } else {
         God.plan(this);
+
+        var autoload = document.currentScript.dataset.autoload;
+
         if (this.addEventListener) {
             // Let there be Cell
-            this.addEventListener("load", function () {
-                console.log("Loaded");
-                God.create(this);
-                window.dispatchEvent(new CustomEvent('cell-loaded', {}));
-            });
+            if (autoload !== "no") {
+                this.addEventListener("load", function () {
+                    God.create(this);
+                    window.dispatchEvent(new CustomEvent("cell-loaded", {}));
+                });
+            }
             // Let there be Render
             this.addEventListener("cell-render", function (e) {
-                console.log("Cell called");
                 var detail = e.detail;
-                if (typeof detail === 'string' || detail instanceof String) {
+                if (typeof detail === "string" || detail instanceof String) {
                     detail = jsonFnParse(detail);
                 }
-                console.log(detail)
+
                 this.cellElement = detail;
-                //God.plan(window);
+
                 God.create(this);
+
+                window.dispatchEvent(new CustomEvent("cell-rendered", {}));
             });
         }
     }
